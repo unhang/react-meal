@@ -7,39 +7,43 @@ const CartProvider = (props) => {
 
   const updateItems = (item) => {
     let updatedItems = [...items];
-    let updatedAmount = 0;
-    updatedItems = updatedItems.map((updatedItem) => {
-      if (updateItems.id !== item.id) {
-        updatedAmount = updatedAmount + updatedItem.amount * updatedItem.price;
-        return updatedItem;
-      } else {
-        updatedAmount =
-          updatedAmount +
-          (updatedItem.amount + item.amount) * updatedItem.price;
-        return {
-          ...updatedItem,
-          amount: updatedItem.amount + item.amount
-        };
-      }
-    });
+    let isItemInCart = false;
 
-    console.log({updatedItems})
-    console.log({updatedAmount})
+    for (let i = 0; i < updatedItems.length; i++) {
+      if (updatedItems[i].id === item.id) {
+        updatedItems[i] = {
+          ...updatedItems[i],
+          amount: updatedItems[i].amount + item.amount
+        };
+        isItemInCart = true;
+        break;
+      }
+    }
+
+    if (!isItemInCart) {
+      updatedItems.push(item);
+    }
 
     setItems(updatedItems);
-    setTotalAmount(updatedAmount);
   };
 
   const addItemToCartHandler = (item) => {
-    console.log({ item });
-    updateItems(item);
+    if (items.length) {
+      updateItems(item);
+    } else {
+      setItems([item]);
+    }
+
+    setTotalAmount((prevState) => {
+      return prevState + item.price * item.amount;
+    });
   };
 
   const removeItemfromCartHandler = (id) => {};
 
   const cartContent = {
     items: items,
-    totalAmount: totalAmount,
+    totalAmount: totalAmount, // price x amount
     addItem: addItemToCartHandler,
     removeItem: removeItemfromCartHandler
   };
