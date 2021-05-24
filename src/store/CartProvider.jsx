@@ -3,6 +3,7 @@ import CartContext from "./cart-context";
 
 const ADD_ITEM = "ADD_ITEM";
 const REMOVE_ITEM = "REMOVE_ITEM";
+const RESET_CART = "RESET_CART";
 
 const defaultCartState = {
   items: [],
@@ -48,7 +49,7 @@ const removeItem = (state, action) => {
   const updatedItems = [...state.items];
   updatedItems[itemIndex] = updatedItem;
   if (updatedItems[itemIndex].amount === 0) {
-    updatedItems.splice(itemIndex, 1)
+    updatedItems.splice(itemIndex, 1);
   }
   const updatedTotalAmount = state.totalAmount - updatedItem.price;
 
@@ -61,6 +62,8 @@ const cartReducer = (state, action) => {
       return addItem(state, action);
     case REMOVE_ITEM:
       return removeItem(state, action);
+    case RESET_CART:
+      return defaultCartState;
     default:
       return defaultCartState;
   }
@@ -77,11 +80,16 @@ const CartProvider = (props) => {
     dispatchAction({ type: REMOVE_ITEM, id: id });
   };
 
+  const resetCart = () => {
+    dispatchAction({ type: RESET_CART });
+  };
+
   const cartContent = {
     items: cartState.items,
     totalAmount: cartState.totalAmount, // price x amount
     addItem: addItemToCartHandler,
-    removeItem: removeItemFromCartHandler
+    removeItem: removeItemFromCartHandler,
+    resetCart: resetCart
   };
 
   return (

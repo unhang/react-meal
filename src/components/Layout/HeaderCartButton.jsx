@@ -14,22 +14,23 @@ const HeaderCartButton = (props) => {
     0
   );
 
-  const btnClasses = `${classes.button} ${btnHighlighted ? classes.bump : ""}`;
   useEffect(() => {
     if (items.length === 0) {
       return;
     }
     setBtnHighLighted(true);
-
+    
     const timer = setTimeout(() => {
       setBtnHighLighted(false);
     }, 300);
-
+    
     return () => {
       clearTimeout(timer)
     }
   }, [items]);
-
+  
+  const btnClasses = `${classes.button} ${btnHighlighted ? classes.bump : ""}`;
+  
   return (
     <button className={btnClasses} onClick={props.onClick}>
       <span className={classes.icon}>
